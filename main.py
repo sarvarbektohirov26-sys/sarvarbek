@@ -1,19 +1,23 @@
-from constants import PUMP_TYPES
+from constants import PUMP_TYPES, INPUT_LIMITS
 from menu import show_pump_menu
 from validation import get_valid_float, get_valid_choice
 from operations import calculate_power, get_head_class
 from logger import print_and_log
+
 def main():
-    print("-- Программа: Напор и мощность насоса --")
+    print("=== Программа: Напор и мощность насоса ===")
     show_pump_menu()
-    pump_choice = get_valid_choice("Ваш выбор (1-3): ", PUMP_TYPES.keys())
+    pump_choice = get_valid_choice("Ваш выбор: ", PUMP_TYPES.keys())
     pump_name = PUMP_TYPES[pump_choice]["name"]
     efficiency = PUMP_TYPES[pump_choice]["efficiency"]
     print("\n--- Ввод параметров ---")
-    q = get_valid_float("Подача Q, м³/ч (0.5 - 500): ", 0.5, 500.0)
-    h = get_valid_float("Напор H, м (1 - 200): ", 1.0, 200.0)
-    p = get_valid_float("Плотность среды p, кг/м³ (800 - 1200): ", 800.0, 1200.0)
-    power = calculate_power(p, 9.81, q, h, efficiency)
+    q_min, q_max = INPUT_LIMITS["q"]
+    q = get_valid_float(f"Подача Q, м³/ч ({q_min}-{q_max}): ", q_min, q_max)
+    h_min, h_max = INPUT_LIMITS["h"]
+    h = get_valid_float(f"Напор H, м ({h_min}-{h_max}): ", h_min, h_max)
+    p_min, p_max = INPUT_LIMITS["p"]
+    p = get_valid_float(f"Плотность среды p, кг/м³ ({p_min}-{p_max}): ", p_min, p_max)
+    power = calculate_power(p, q, h, efficiency)
     head_class = get_head_class(h)
     print("\n--- Результаты расчета ---")
     print_and_log(f"Тип насоса: {pump_name}")

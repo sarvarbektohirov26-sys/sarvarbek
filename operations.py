@@ -1,12 +1,13 @@
-from constants import G
-def calculate_power(p, g, q, h, efficiency):
-    power = (p * g * q * h) / (3600 * 1000 * efficiency)
+from constants import G, TIME_CONVERSION, POWER_CONVERSION, HEAD_LIMITS
+
+def calculate_power(p, q, h, efficiency):
+    power = (p * G * q * h) / (TIME_CONVERSION * POWER_CONVERSION * efficiency)
     return power
+
 def get_head_class(h):
-    if h < 10:
+    if h < HEAD_LIMITS["low_max"]:
         return "Малый напор"
-    elif 10 <= h <= 60:
+    elif h <= HEAD_LIMITS["medium_max"]:
         return "Средний напор"
     else:
         return "Высокий напор"
-    
